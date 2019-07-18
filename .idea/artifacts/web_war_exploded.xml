@@ -10,6 +10,7 @@
         <element id="directory" name="lib">
           <element id="file-copy" path="$PROJECT_DIR$/../../Stuffs/junit4.jar" />
           <element id="library" level="project" name="jstl-1.2" />
+          <element id="library" level="project" name="postgresql-42.2.6" />
         </element>
       </element>
     </root>
