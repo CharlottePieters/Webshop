@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductDbInMemory {
+public class ProductDbInMemory implements ProductDb {
 	private Map<Integer, Product> records = new HashMap<>();
 	
 	public ProductDbInMemory () {
@@ -15,18 +15,21 @@ public class ProductDbInMemory {
 		add(rose);
 	}
 	
-	public Product get(int id){
+	@Override
+    public Product get(int id){
 		if(id < 0){
 			throw new DbException("No valid id given");
 		}
 		return records.get(id);
 	}
 	
-	public List<Product> getAll(){
+	@Override
+    public List<Product> getAll(){
 		return new ArrayList<Product>(records.values());	
 	}
 
-	public void add(Product product){
+	@Override
+    public void add(Product product){
 		if(product == null){
 			throw new DbException("No product given");
 		}
@@ -38,7 +41,8 @@ public class ProductDbInMemory {
 		records.put(product.getProductId(), product);
 	}
 	
-	public void update(Product product){
+	@Override
+    public void update(Product product){
 		if(product == null){
 			throw new DbException("No product given");
 		}
@@ -48,14 +52,16 @@ public class ProductDbInMemory {
 		records.put(product.getProductId(), product);
 	}
 	
-	public void delete(int id){
+	@Override
+    public void delete(int id){
 		if(id < 0){
 			throw new DbException("No valid id given");
 		}
 		records.remove(id);
 	}
 
-	public int getNumbeOfProducts() {
+	@Override
+    public int getNumbeOfProducts() {
 		return records.size();
 	}
 }

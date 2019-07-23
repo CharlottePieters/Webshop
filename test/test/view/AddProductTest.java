@@ -15,7 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class AddProductTest {
     private WebDriver driver;
-    private String path = "http://localhost:8080/Labo_1_war_exploded/Controller";
+    private String path = "http://localhost:8080/web_war_exploded/Controller";
 
     @Before
     public void setUp() {

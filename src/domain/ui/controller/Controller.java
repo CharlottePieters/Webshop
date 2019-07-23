@@ -1,9 +1,8 @@
 package domain.ui.controller;
 
-import domain.db.PersonDbInMemory;
-import domain.db.ProductDbInMemory;
 import domain.model.Person;
 import domain.model.Product;
+import domain.model.ShopService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +15,7 @@ import java.util.List;
 
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
-    PersonDbInMemory personDB = new PersonDbInMemory();
-    ProductDbInMemory productDB = new ProductDbInMemory();
+    ShopService service = new ShopService();
 
     public Controller() throws Exception {
     }
@@ -90,7 +88,7 @@ public class Controller extends HttpServlet {
     }
 
     private String usersOverview(HttpServletRequest request, HttpServletResponse response){
-        List<Person> persons = this.personDB.getAll();
+        List<Person> persons = this.service.getPersons();
         request.setAttribute("persons", persons);
         return "personoverview.jsp";
     }
@@ -144,7 +142,7 @@ public class Controller extends HttpServlet {
 
         if (errors.isEmpty()) {
             try {
-                this.personDB.add(person);
+                this.service.addPerson(person);
             } catch (Exception e) {
                 errors.add(e.getMessage());
             }
@@ -162,7 +160,7 @@ public class Controller extends HttpServlet {
 
 
     private String productsOverview(HttpServletRequest request, HttpServletResponse response){
-        List<Product> products = this.productDB.getAll();
+        List<Product> products = this.service.getProducts();
         request.setAttribute("products", products);
         return "productoverview.jsp";
     }
@@ -200,7 +198,7 @@ public class Controller extends HttpServlet {
 
         if (errors.isEmpty()) {
             try {
-                this.productDB.add(product);
+                this.service.addProduct(product);
             } catch (Exception e) {
                 errors.add(e.getMessage());
             }
@@ -218,7 +216,7 @@ public class Controller extends HttpServlet {
 
     private String showUpdateProductPage(HttpServletRequest request, HttpServletResponse response) {
         int productId = Integer.parseInt(request.getParameter("productId"));
-        Product product = this.productDB.get(productId);
+        Product product = this.service.getProduct(productId);
         request.setAttribute("product", product);
         return "updateProduct.jsp";
     }
@@ -226,16 +224,14 @@ public class Controller extends HttpServlet {
     private String updateProduct(HttpServletRequest request, HttpServletResponse response) {
         String productIdString = request.getParameter("productId");
         int productId = Integer.parseInt(productIdString);
-        Product product = this.productDB.get(productId);
-
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String price = request.getParameter("price");
 
         try{
-            product.setName(name);
-            product.setDescription(description);
-            product.setPrice(price);
+            Double priceDouble = Double.parseDouble(price);
+            Product product = new Product(productId, name, description, priceDouble);
+            service.updateProducts(product);
             return productsOverview(request, response);
         }
         catch (Exception e){
@@ -246,27 +242,27 @@ public class Controller extends HttpServlet {
 
     private String showDeleteProductPage(HttpServletRequest request, HttpServletResponse response) {
         int productId = Integer.parseInt(request.getParameter("productId"));
-        Product product = this.productDB.get(productId);
+        Product product = this.service.getProduct(productId);
         request.setAttribute("product", product);
         return "deleteProduct.jsp";
     }
 
     private String deleteProduct(HttpServletRequest request, HttpServletResponse response) {
         int productId = Integer.parseInt(request.getParameter("productId"));
-        this.productDB.delete(productId);
+        this.service.deleteProduct(productId);
         return productsOverview(request, response);
     }
 
     private String showDeletePersonPage(HttpServletRequest request, HttpServletResponse response) {
         String userid = request.getParameter("userid");
-        Person person = this.personDB.get(userid);
+        Person person = this.service.getPerson(userid);
         request.setAttribute("person", person);
         return "deletePerson.jsp";
     }
 
     private String deletePerson(HttpServletRequest request, HttpServletResponse response) {
         String userid = request.getParameter("userid");
-        this.personDB.delete(userid);
+        this.service.deletePerson(userid);
         return usersOverview(request, response);
     }
 

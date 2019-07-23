@@ -5,10 +5,8 @@ public class Product {
 	private String name;
 	private String description;
 	private double price;
-	
-	public Product() {
-		
-	}
+
+	public Product(){}
 	
 	public Product(int productId, String name, String description, double d) {
 		setProductId(productId);
