@@ -40,9 +40,9 @@
 
 
         <form method="post" action="Controller?action=addProductToDB" novalidate="novalidate">
-            <p><label for="name">Name</label><input type="text" id="name" name="name" required value="${name}"> </p>
-            <p><label for="description">Description</label><input type="text" id="description" name="description" required value="${description}"> </p>
-            <p><label for="price">Price</label><input type="text" id="price" name="price" required value="${price}"></p>
+            <p><label for="name">Name</label><input type="text" id="name" name="name" required value="<c:out value='${name}'/>"> </p>
+            <p><label for="description">Description</label><input type="text" id="description" name="description" required value="<c:out value='${description}'/>"> </p>
+            <p><label for="price">Price</label><input type="text" id="price" name="price" required value="<c:out value='${price}'/>"></p>
             <p><input type="submit" id="addProduct" value="Add Product"></p>
         </form>
     </main>

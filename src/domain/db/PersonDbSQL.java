@@ -25,9 +25,10 @@ public class PersonDbSQL implements PersonDb {
         }
 
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
-             Statement statement = connection.createStatement();){
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person WHERE userid = ?")){
 
-            ResultSet result = statement.executeQuery("SELECT * FROM person WHERE userid = '" + personId + "'");
+            statement.setString(1, personId);
+            ResultSet result = statement.executeQuery();
             result.next();
             String userid = result.getString("userid");
             String email = result.getString("email");
@@ -75,7 +76,9 @@ public class PersonDbSQL implements PersonDb {
             throw new DbException("No person given");
         }
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
-             Statement statement = connection.createStatement();) {
+             PreparedStatement statement = connection.prepareStatement("select * from person where userid = ?");
+             PreparedStatement statement2 = connection.prepareStatement("insert into person values (?, ?, ?, ?, ?)")
+        ) {
 
             String userid = person.getUserid();
             String email = person.getEmail();
@@ -83,12 +86,18 @@ public class PersonDbSQL implements PersonDb {
             String firstname = person.getFirstName();
             String lastname = person.getLastName();
 
-            ResultSet userPresent = statement.executeQuery("select * from person where userid = '" + userid + "'");
+            statement.setString(1, userid);
+            ResultSet userPresent = statement.executeQuery();
             if (userPresent.next()){
                 throw new DbException("User already exists");
             }
             else {
-                statement.executeUpdate("insert into person values ('" + userid + "', '" + email + "', '" + password + "', '" + firstname + "', '" + lastname + "')");
+                statement2.setString(1, userid);
+                statement2.setString(2, email);
+                statement2.setString(3, password);
+                statement2.setString(4, firstname);
+                statement2.setString(5, lastname);
+                statement2.execute();
             }
         }
         catch (SQLException e) {
@@ -102,7 +111,10 @@ public class PersonDbSQL implements PersonDb {
             throw new DbException("No person given");
         }
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
-             Statement statement = connection.createStatement();) {
+             PreparedStatement statement = connection.prepareStatement("select * from person where userid = ?");
+             PreparedStatement deleteStatement = connection.prepareStatement("delete from person where userid = ?");
+             PreparedStatement statement2 = connection.prepareStatement("insert into person values (?, ?, ?, ?, ?)")
+        ) {
 
             String userid = person.getUserid();
             String email = person.getEmail();
@@ -110,13 +122,20 @@ public class PersonDbSQL implements PersonDb {
             String firstname = person.getFirstName();
             String lastname = person.getLastName();
 
-            ResultSet userPresent = statement.executeQuery("select * from person where userid = '" + userid + "'");
+            statement.setString(1, userid);
+            ResultSet userPresent = statement.executeQuery();
             if (!userPresent.next()){
                 throw new DbException("No person found");
             }
             else {
-                statement.executeUpdate("delete from person where userid = ' " + userid + "'");
-                statement.executeUpdate("insert into person values ('" + userid + "', '" + email + "', '" + password + "', '" + firstname + "', '" + lastname + "')");
+                deleteStatement.setString(1, userid);
+                deleteStatement.execute();
+                statement2.setString(1, userid);
+                statement2.setString(2, email);
+                statement2.setString(3, password);
+                statement2.setString(4, firstname);
+                statement2.setString(5, lastname);
+                statement2.execute();
             }
         }
         catch (SQLException e) {
@@ -130,14 +149,19 @@ public class PersonDbSQL implements PersonDb {
             throw new DbException("No id given");
         }
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
-             Statement statement = connection.createStatement();) {
+             PreparedStatement statement = connection.prepareStatement("select * from person where userid = ?");
+             PreparedStatement deleteStatement = connection.prepareStatement("delete from person where userid = ?")
+        ) {
 
-            ResultSet userPresent = statement.executeQuery("select * from person where userid = '" + personId + "'");
+            statement.setString(1, personId);
+            ResultSet userPresent = statement.executeQuery();
+
             if (!userPresent.next()){
                 throw new DbException("No person found");
             }
             else {
-                statement.executeUpdate("delete from person where userid = '" + personId + "'");
+                deleteStatement.setString(1, personId);
+                deleteStatement.execute();
             }
         }
         catch (SQLException e) {
