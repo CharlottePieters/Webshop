@@ -10,9 +10,39 @@
             <scripting-invalid>true</scripting-invalid>
         </jsp-property-group>
     </jsp-config>
+
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error.jsp</location>
     </error-page>
+
+    <context-param>
+       <param-name>url</param-name>
+       <param-value>jdbc:postgresql://databanken.ucll.be:51819/2TXVT</param-value>
+    </context-param>
+    <context-param>
+        <param-name>user</param-name>
+        <param-value>r0647075</param-value>
+    </context-param>
+    <context-param>
+        <param-name>password</param-name>
+        <param-value>8terWesseltje20</param-value>
+    </context-param>
+    <context-param>
+        <param-name>currentSchema</param-name>
+        <param-value>r0647075</param-value>
+    </context-param>
+    <context-param>
+        <param-name>ssl</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>sslmode</param-name>
+        <param-value>verify-ca</param-value>
+    </context-param>
+    <context-param>
+        <param-name>sslfactory</param-name>
+        <param-value>org.postgresql.ssl.NonValidatingFactory</param-value>
+    </context-param>
 
 </web-app>

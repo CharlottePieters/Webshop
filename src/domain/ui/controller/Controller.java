@@ -1,9 +1,11 @@
 package domain.ui.controller;
 
+import domain.db.DbException;
 import domain.model.Person;
 import domain.model.Product;
 import domain.model.ShopService;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,10 +14,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
-    ShopService service = new ShopService();
+    private ShopService service;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        ServletContext context = getServletContext();
+
+        Properties properties = new Properties();
+        properties.setProperty("user", context.getInitParameter("user"));
+        properties.setProperty("ssl", context.getInitParameter("ssl"));
+        properties.setProperty("sslfactory", context.getInitParameter("sslfactory"));
+        properties.setProperty("sslmode", context.getInitParameter("sslmode"));
+        properties.setProperty("url", context.getInitParameter("url"));
+
+        try {
+            service = new ShopService(properties);
+        } catch (Exception e) {
+            throw new DbException(e.getMessage(), e);
+        }
+    }
 
     public Controller() throws Exception {
     }

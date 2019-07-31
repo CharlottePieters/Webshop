@@ -6,15 +6,21 @@ import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class ProductDbSQL implements ProductDb {
+    private Properties properties;
+    private String url;
     private String ww = JOptionPane.showInputDialog("Wachtwoord school");
 
-    public ProductDbSQL() throws ClassNotFoundException {
+    public ProductDbSQL(Properties properties) throws ClassNotFoundException {
         try {
             Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver");
+            this.properties = properties;
+            properties.setProperty("password", this.ww);
+            this.url = properties.getProperty("url");
+        } catch (Exception e) {
+            throw new DbException(e.getMessage(), e);
         }
     }
 
@@ -24,7 +30,7 @@ public class ProductDbSQL implements ProductDb {
             throw new DbException("No valid id given");
         }
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
+        try (Connection connection = DriverManager.getConnection(url, properties);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM product WHERE productId = ?")){
 
             statement.setInt(1, id);
@@ -47,8 +53,8 @@ public class ProductDbSQL implements ProductDb {
     public List<Product> getAll() {
         List<Product> products = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
-             Statement statement = connection.createStatement();) {
+        try (Connection connection = DriverManager.getConnection(url, properties);
+             Statement statement = connection.createStatement()) {
 
             ResultSet result = statement.executeQuery("select * from product");
 
@@ -73,7 +79,7 @@ public class ProductDbSQL implements ProductDb {
         if (product == null){
             throw new DbException("No product given");
         }
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
+        try (Connection connection = DriverManager.getConnection(url, properties);
              PreparedStatement statement1 = connection.prepareStatement("select * from product where productId = ?");
              PreparedStatement userStatement = connection.prepareStatement("insert into product values (?, ?, ?, ?)")) {
 
@@ -112,7 +118,7 @@ public class ProductDbSQL implements ProductDb {
         if (product == null){
             throw new DbException("No product given");
         }
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
+        try (Connection connection = DriverManager.getConnection(url, properties);
              PreparedStatement statement = connection.prepareStatement("select * from product where productId = ?");
              PreparedStatement deleteStatement = connection.prepareStatement("delete from product where productId = ?");
              PreparedStatement insertStatement = connection.prepareStatement("insert into product values (?, ?, ?, ?)")) {
@@ -147,7 +153,7 @@ public class ProductDbSQL implements ProductDb {
         if (id < 0){
             throw new DbException("No valid id given");
         }
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
+        try (Connection connection = DriverManager.getConnection(url, properties);
              PreparedStatement getStatement = connection.prepareStatement("select * from product where productId = ?");
              PreparedStatement deleteStatement = connection.prepareStatement("delete from product where productId = ?")) {
 
@@ -168,7 +174,7 @@ public class ProductDbSQL implements ProductDb {
 
     @Override
     public int getNumbeOfProducts() {
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://databanken.ucll.be:51819/2TXVT?sslmode=require&currentSchema=r0647075", "r0647075", this.ww);
+        try (Connection connection = DriverManager.getConnection(url, properties);
              Statement statement = connection.createStatement();) {
 
             ResultSet resultSet = statement.executeQuery("select count(*) as number from product");

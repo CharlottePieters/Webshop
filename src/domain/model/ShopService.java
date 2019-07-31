@@ -3,12 +3,15 @@ package domain.model;
 import domain.db.*;
 
 import java.util.List;
+import java.util.Properties;
 
 public class ShopService {
-    private PersonDb personDb = new PersonDbSQL();
-    private ProductDb productDb = new ProductDbSQL();
+    private PersonDb personDb;
+    private ProductDb productDb;
 
-    public ShopService() throws ClassNotFoundException {
+    public ShopService(Properties properties) throws ClassNotFoundException {
+        this.personDb = new PersonDbSQL(properties);
+        this.productDb = new ProductDbSQL(properties);
     }
 
     public Person getPerson(String personId) {
