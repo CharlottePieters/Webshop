@@ -1,5 +1,9 @@
 package domain.model;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +14,7 @@ public class Person {
 	private String firstName;
 	private String lastName;
 
-	public Person(String userid, String email, String password, String firstName, String lastName) {
+	public Person(String userid, String email, String password, String firstName, String lastName) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		setUserid(userid);
 		setEmail(email);
 		setPassword(password);
@@ -54,7 +58,7 @@ public class Person {
 	}
 	
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 	
 	public boolean isCorrectPassword(String password) {
@@ -64,11 +68,46 @@ public class Person {
 		return getPassword().equals(password);
 	}
 
-	public void setPassword(String password) {
+	public boolean isCorrectHashedPassword(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		if(password.isEmpty()){
 			throw new IllegalArgumentException("No password given");
 		}
-		this.password = password;
+		password = hashPassword(password);
+		if (password == this.password){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void setPassword(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		if(password.isEmpty()){
+			throw new IllegalArgumentException("No password given");
+		}
+		if (password.length() > 60){
+			this.password = password;
+		}
+		else {
+			setHashedPassword(password);
+		}
+	}
+
+	public void setHashedPassword(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		if(password.isEmpty()){
+			throw new IllegalArgumentException("No password given");
+		}
+		this.password = hashPassword(password);
+	}
+
+	public String hashPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		MessageDigest crypt = MessageDigest.getInstance("SHA-512");
+		crypt.reset();
+		byte[] passwordBytes = password.getBytes("UTF-8");
+		crypt.update(passwordBytes);
+		byte[] digest = crypt.digest();
+		BigInteger digestAsBI = new BigInteger(1, digest);
+		return digestAsBI.toString();
 	}
 
 	public String getFirstName() {

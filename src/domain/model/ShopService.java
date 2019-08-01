@@ -2,6 +2,8 @@ package domain.model;
 
 import domain.db.*;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,10 +16,10 @@ public class ShopService {
         this.productDb = new ProductDbSQL(properties);
     }
 
-    public Person getPerson(String personId) {
+    public Person getPerson(String personId) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return getPersonDb().get(personId);
     }
-    public List<Person> getPersons() {
+    public List<Person> getPersons() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return getPersonDb().getAll();
     }
     public void addPerson(Person person) {

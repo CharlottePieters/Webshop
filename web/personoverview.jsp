@@ -31,6 +31,8 @@
                 <th>E-mail</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>Delete</th>
+                <th>Check Password</th>
             </tr>
             <c:forEach var="person" items="${persons}">
                 <tr>
@@ -38,6 +40,7 @@
                     <td>${person.firstName}</td>
                     <td>${person.lastName}</td>
                     <td><a href="Controller?action=deletePerson&userid=${person.userid}">Delete</a></td>
+                    <td><a href="Controller?action=checkPasswordPage&userid=${person.userid}">Check</a></td>
                 </tr>
             </c:forEach>
             <caption>Users Overview</caption>

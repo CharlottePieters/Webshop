@@ -3,6 +3,8 @@ package jdbc;
 import domain.model.Person;
 
 import javax.swing.*;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 public class PrintDB {
@@ -24,6 +26,10 @@ public class PrintDB {
             }
             catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
+            } catch (UnsupportedEncodingException e) {e.printStackTrace();
+
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
         }
         statement.close();

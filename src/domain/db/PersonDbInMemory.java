@@ -2,6 +2,8 @@ package domain.db;
 
 import domain.model.Person;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.Map;
 public class PersonDbInMemory implements PersonDb {
 	private Map<String, Person> persons = new HashMap<>();
 	
-	public PersonDbInMemory () {
+	public PersonDbInMemory () throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		Person administrator = new Person("admin", "admin@ucll.be", "t", "Ad", "Ministrator");
 		add(administrator);
 		Person charlotte = new Person("charliep", "charlotte@gmail.com", "t", "Charlotte", "Pieters");

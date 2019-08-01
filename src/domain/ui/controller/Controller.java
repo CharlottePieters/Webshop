@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -59,7 +61,7 @@ public class Controller extends HttpServlet {
         }
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NoSuchAlgorithmException {
         String action = "";
         String destination;
 
@@ -104,19 +106,25 @@ public class Controller extends HttpServlet {
             case "deletePersonFromDB":
                 destination = deletePerson(request, response);
                 break;
+            case "checkPasswordPage":
+                destination = showPasswordPage(request, response);
+                break;
+            case "checkPassword":
+                destination = checkPassword(request, response);
+                break;
             default:
                 destination = "index.jsp";
         }
         request.getRequestDispatcher(destination).forward(request, response);
     }
 
-    private String usersOverview(HttpServletRequest request, HttpServletResponse response){
+    private String usersOverview(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         List<Person> persons = this.service.getPersons();
         request.setAttribute("persons", persons);
         return "personoverview.jsp";
     }
 
-    private String addPerson(HttpServletRequest request, HttpServletResponse response){
+    private String addPerson(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         List<String> errors = new ArrayList<String>();
         Person person = new Person();
 
@@ -276,17 +284,38 @@ public class Controller extends HttpServlet {
         return productsOverview(request, response);
     }
 
-    private String showDeletePersonPage(HttpServletRequest request, HttpServletResponse response) {
+    private String showDeletePersonPage(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String userid = request.getParameter("userid");
         Person person = this.service.getPerson(userid);
         request.setAttribute("person", person);
         return "deletePerson.jsp";
     }
 
-    private String deletePerson(HttpServletRequest request, HttpServletResponse response) {
+    private String deletePerson(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String userid = request.getParameter("userid");
         this.service.deletePerson(userid);
         return usersOverview(request, response);
+    }
+
+    private String showPasswordPage(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String userid = request.getParameter("userid");
+        Person person = this.service.getPerson(userid);
+        request.setAttribute("person", person);
+        return "checkPassword.jsp";
+    }
+
+    private String checkPassword(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String userid = request.getParameter("userid");
+        Person person = this.service.getPerson(userid);
+        String password = person.getPassword();
+
+        String givenPassword = request.getParameter("password");
+        givenPassword = person.hashPassword(givenPassword);
+
+        boolean correct = password.equals(givenPassword);
+
+        request.setAttribute("correct", correct);
+        return "checkPassword.jsp";
     }
 
 

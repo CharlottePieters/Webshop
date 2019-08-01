@@ -3,6 +3,8 @@ package domain.db;
 import domain.model.Person;
 
 import javax.swing.*;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class PersonDbSQL implements PersonDb {
     }
 
     @Override
-    public Person get(String personId) {
+    public Person get(String personId) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (personId == null){
             throw new DbException("No id given");
         }
@@ -45,13 +47,13 @@ public class PersonDbSQL implements PersonDb {
             Person person = new Person(userid, email, password, firstname, lastname);
             return person;
         }
-        catch (SQLException e){
+        catch (SQLException e) {
             throw new DbException(e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Person> getAll() {
+    public List<Person> getAll() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         List<Person> persons = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url, properties);
