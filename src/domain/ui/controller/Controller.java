@@ -1,8 +1,6 @@
 package domain.ui.controller;
 
 import domain.db.DbException;
-import domain.model.Person;
-import domain.model.Product;
 import domain.model.ShopService;
 
 import javax.servlet.ServletContext;
@@ -12,15 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
     private ShopService service;
+    private HandlerFactory handlerFactory = new HandlerFactory();
 
     @Override
     public void init() throws ServletException {
@@ -62,14 +58,17 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NoSuchAlgorithmException {
-        String action = "";
-        String destination;
-
-        if (request.getParameter("action") != null) {
-            action = request.getParameter("action");
+        try{
+            String action = request.getParameter("action");
+            RequestHandler handler = this.handlerFactory.getHandler(action, this.service);
+            String destination = handler.handleRequest(request, response);
+            request.getRequestDispatcher(destination).forward(request, response);
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
-        switch (action) {
+        /*switch (action) {
             case "users":
                 destination = usersOverview(request, response);
                 break;
@@ -115,16 +114,16 @@ public class Controller extends HttpServlet {
             default:
                 destination = "index.jsp";
         }
-        request.getRequestDispatcher(destination).forward(request, response);
+        request.getRequestDispatcher(destination).forward(request, response);*/
     }
 
-    private String usersOverview(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    /*private String usersOverview(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         List<Person> persons = this.service.getPersons();
         request.setAttribute("persons", persons);
         return "personoverview.jsp";
-    }
+    }*/
 
-    private String addPerson(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    /*private String addPerson(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         List<String> errors = new ArrayList<String>();
         Person person = new Person();
 
@@ -187,16 +186,16 @@ public class Controller extends HttpServlet {
             request.setAttribute("errors", errors);
             return "signUp.jsp";
         }
-    }
+    }*/
 
 
-    private String productsOverview(HttpServletRequest request, HttpServletResponse response){
+    /*private String productsOverview(HttpServletRequest request, HttpServletResponse response){
         List<Product> products = this.service.getProducts();
         request.setAttribute("products", products);
         return "productoverview.jsp";
-    }
+    }*/
 
-    private String addProduct(HttpServletRequest request, HttpServletResponse response){
+    /*private String addProduct(HttpServletRequest request, HttpServletResponse response){
         List<String> errors = new ArrayList<String>();
         Product product = new Product();
 
@@ -243,16 +242,16 @@ public class Controller extends HttpServlet {
             request.setAttribute("errors", errors);
             return "addProduct.jsp";
         }
-    }
+    }*/
 
-    private String showUpdateProductPage(HttpServletRequest request, HttpServletResponse response) {
+    /*private String showUpdateProductPage(HttpServletRequest request, HttpServletResponse response) {
         int productId = Integer.parseInt(request.getParameter("productId"));
         Product product = this.service.getProduct(productId);
         request.setAttribute("product", product);
         return "updateProduct.jsp";
-    }
+    }*/
 
-    private String updateProduct(HttpServletRequest request, HttpServletResponse response) {
+    /*private String updateProduct(HttpServletRequest request, HttpServletResponse response) {
         String productIdString = request.getParameter("productId");
         int productId = Integer.parseInt(productIdString);
         String name = request.getParameter("name");
@@ -268,43 +267,43 @@ public class Controller extends HttpServlet {
         catch (Exception e){
             return showUpdateProductPage(request, response);
         }
-    }
+    }*/
 
 
-    private String showDeleteProductPage(HttpServletRequest request, HttpServletResponse response) {
+    /*private String showDeleteProductPage(HttpServletRequest request, HttpServletResponse response) {
         int productId = Integer.parseInt(request.getParameter("productId"));
         Product product = this.service.getProduct(productId);
         request.setAttribute("product", product);
         return "deleteProduct.jsp";
-    }
+    }*/
 
-    private String deleteProduct(HttpServletRequest request, HttpServletResponse response) {
+    /*private String deleteProduct(HttpServletRequest request, HttpServletResponse response) {
         int productId = Integer.parseInt(request.getParameter("productId"));
         this.service.deleteProduct(productId);
         return productsOverview(request, response);
-    }
+    }*/
 
-    private String showDeletePersonPage(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+   /* private String showDeletePersonPage(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String userid = request.getParameter("userid");
         Person person = this.service.getPerson(userid);
         request.setAttribute("person", person);
         return "deletePerson.jsp";
-    }
+    }*/
 
-    private String deletePerson(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    /*private String deletePerson(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String userid = request.getParameter("userid");
         this.service.deletePerson(userid);
         return usersOverview(request, response);
-    }
+    }*/
 
-    private String showPasswordPage(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    /*private String showPasswordPage(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String userid = request.getParameter("userid");
         Person person = this.service.getPerson(userid);
         request.setAttribute("person", person);
         return "checkPassword.jsp";
-    }
+    }*/
 
-    private String checkPassword(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    /*private String checkPassword(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String userid = request.getParameter("userid");
         Person person = this.service.getPerson(userid);
         String password = person.getPassword();
@@ -316,7 +315,7 @@ public class Controller extends HttpServlet {
 
         request.setAttribute("correct", correct);
         return "checkPassword.jsp";
-    }
+    }*/
 
 
 }

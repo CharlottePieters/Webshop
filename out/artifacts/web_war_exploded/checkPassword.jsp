@@ -42,7 +42,7 @@
         <c:if test="${empty correct and not empty person}">
             <h3>Fill out the password for ${person.firstName} ${person.lastName}:</h3>
             <form method="post" action="Controller?action=checkPassword&userid=${person.userid}" novalidate="novalidate">
-                <p><label for="password">Password</label><input type="text" id="password" name="password"></p>
+                <p><label for="password">Password</label><input type="password" id="password" name="password"></p>
                 <p><input type="submit" id="checkPassword" value="Check"></p>
             </form>
         </c:if>
