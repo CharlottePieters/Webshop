@@ -20,6 +20,7 @@
                 <li id="actual"><a href="Controller?action=products">Products</a></li>
                 <li><a href="Controller?action=addProduct">Add Product</a></li>
                 <li><a href="Controller?action=signUp">Sign up</a></li>
+                <li><a href="Controller?action=cart">My Cart</a></li>
             </ul>
         </nav>
         <h2>Product Overview</h2>
@@ -31,6 +32,8 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
+                <th>Delete</th>
+                <th>Add to cart</th>
             </tr>
             <c:forEach var="product" items="${products}">
                 <tr>
@@ -38,6 +41,12 @@
                     <td>${product.description}</td>
                     <td>${product.price}</td>
                     <td><a href="Controller?action=deleteProduct&productId=${product.productId}">Delete</a></td>
+                    <td>
+                        <form style="display: inline" method="post" action="Controller?action=addToCart&productId=${product.productId}">
+                            <input type="number" id="amount" name="amount" value="1" width="3" required >
+                            <input type="submit" id="addToCart" value="Add to Cart">
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
             <caption>Products Overview</caption>

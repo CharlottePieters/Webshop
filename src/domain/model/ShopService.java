@@ -2,6 +2,7 @@ package domain.model;
 
 import domain.db.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -22,6 +23,9 @@ public class ShopService {
     public List<Person> getPersons() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return getPersonDb().getAll();
     }
+    public List<Person> getPersons(String sortingStyle){
+        return getPersonDb().getAll(sortingStyle);
+    }
     public void addPerson(Person person) {
         getPersonDb().add(person);
     }
@@ -41,4 +45,20 @@ public class ShopService {
     public void updateProducts(Product product) { getProductDb().update(product); }
     public void deleteProduct (int id) { getProductDb().delete(id); }
     private ProductDb getProductDb() { return  productDb; }
+
+    public Person getUserIfAuthenticated(String userId, String password){ //returns person if authenticated, null if not
+        try {
+            Person person = getPerson(userId);
+            if (person.isCorrectHashedPassword(password)) { //password correct
+                return person;
+            }
+            else { //password incorrect
+                System.out.println("password incorrect");
+                return null;
+            }
+        } catch (Exception e) { //userId is incorrect or other error
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

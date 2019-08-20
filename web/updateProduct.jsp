@@ -22,6 +22,7 @@
                 <li><a href="Controller?action=products">Products</a></li>
                 <li><a href="Controller?action=addProduct">Add Product</a></li>
                 <li><a href="Controller?action=signUp">Sign up</a></li>
+                <li><a href="Controller?action=cart">My Cart</a></li>
             </ul>
         </nav>
         <h2>Update Product</h2>

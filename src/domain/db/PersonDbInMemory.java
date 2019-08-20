@@ -66,4 +66,9 @@ public class PersonDbInMemory implements PersonDb {
 	public int getNumberOfPersons() {
 		return persons.size();
 	}
+
+	@Override
+	public List<Person> getAll(String sortStyle) {
+		return this.getAll();
+	}
 }

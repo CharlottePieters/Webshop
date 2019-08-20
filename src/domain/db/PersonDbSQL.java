@@ -190,4 +190,45 @@ public class PersonDbSQL implements PersonDb {
             throw new DbException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Person> getAll(String sortStyle){
+        List<Person> persons = new ArrayList<>();
+        ResultSet result;
+
+        try (Connection connection = DriverManager.getConnection(url, properties);
+             Statement statement = connection.createStatement();) {
+
+            if (sortStyle.equals("email")){
+                result = statement.executeQuery("select * from person order by email");
+            }
+            else if (sortStyle.equals("firstName")) {
+                result = statement.executeQuery("select * from person order by firstname");
+            }
+            else if (sortStyle.equals("lastName")) {
+                result = statement.executeQuery("select * from person order by lastname");
+            }
+            else {
+                result = statement.executeQuery("select * from person");
+            }
+
+            while (result.next()) {
+                String userid = result.getString("userid");
+                String email = result.getString("email");
+                String password = result.getString("password");
+                String firstname = result.getString("firstname");
+                String lastname = result.getString("lastname");
+
+                Person person = new Person(userid, email, password, firstname, lastname);
+                persons.add(person);
+            }
+
+            return persons;
+        }
+
+        catch (Exception e) {
+            throw new DbException(e.getMessage(), e);
+        }
+    }
+
 }

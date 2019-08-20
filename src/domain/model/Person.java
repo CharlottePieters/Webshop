@@ -72,8 +72,9 @@ public class Person {
 		if(password.isEmpty()){
 			throw new IllegalArgumentException("No password given");
 		}
+
 		password = hashPassword(password);
-		if (password == this.password){
+		if (password.equals(this.password)){
 			return true;
 		}
 		else {

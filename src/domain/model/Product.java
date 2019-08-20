@@ -59,7 +59,25 @@ public class Product {
 		}
 		setPrice(Double.valueOf(price));
 	}
-	
+
+	@Override
+	public boolean equals(Object o){
+		if (o instanceof Product){
+			if (o == this){
+				return true;
+			}
+			else if (((Product) o).getProductId() == this.productId){
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
 	@Override
 	public String toString(){
 		return getName() + ": " + getDescription() + " - " + getPrice();

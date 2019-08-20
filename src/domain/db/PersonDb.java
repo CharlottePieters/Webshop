@@ -18,4 +18,6 @@ public interface PersonDb {
     void delete(String personId);
 
     int getNumberOfPersons();
+
+    List<Person> getAll(String sortStyle);
 }

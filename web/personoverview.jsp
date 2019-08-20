@@ -20,14 +20,27 @@
                 <li><a href="Controller?action=products">Products</a></li>
                 <li><a href="Controller?action=addProduct">Add Product</a></li>
                 <li><a href="Controller?action=signUp">Sign up</a></li>
+                <li><a href="Controller?action=cart">My Cart</a></li>
             </ul>
         </nav>
         <h2>User Overview</h2>
     </header>
 
     <main>
+        <aside>
+            <form action="Controller?action=sortUsers" method="post">
+                <select name="sortStyle">
+                    <option value="email" selected>Email</option>
+                    <option value="firstName" <c:if test="${cookie.sortStyle.value eq 'firstName'}">selected</c:if>>First Name</option>
+                    <option value="lastName"<c:if test="${cookie.sortStyle.value eq 'lastName'}">selected</c:if>>Name</option>
+                </select>
+                <input type="submit" value="Submit Query"/>
+            </form>
+
+        </aside>
         <table>
             <tr>
+                <th>User Id</th>
                 <th>E-mail</th>
                 <th>First Name</th>
                 <th>Last Name</th>
@@ -36,6 +49,7 @@
             </tr>
             <c:forEach var="person" items="${persons}">
                 <tr>
+                    <td>${person.userid}</td>
                     <td>${person.email}</td>
                     <td>${person.firstName}</td>
                     <td>${person.lastName}</td>

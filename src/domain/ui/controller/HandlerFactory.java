@@ -51,6 +51,24 @@ public class HandlerFactory {
             case "checkPassword":
                 handler = new CheckPasswordHandler(service);
                 break;
+            case "quote":
+                handler = new QuoteHandler(service);
+                break;
+            case "sortUsers":
+                handler = new SortUsersHandler(service);
+                break;
+            case "cart":
+                handler = new ShowCartHandler(service);
+                break;
+            case "addToCart":
+                handler = new AddToCartHandler(service);
+                break;
+            case "authenticate":
+                handler = new AuthenticateHandler(service);
+                break;
+            case "logout":
+                handler = new LogOutHandler(service);
+                break;
             default:
                 handler = new ShowIndexHandler(service);
         }
