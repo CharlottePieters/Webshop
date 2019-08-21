@@ -43,8 +43,9 @@ public class PersonDbSQL implements PersonDb {
             String password = result.getString("password");
             String firstname = result.getString("firstname");
             String lastname = result.getString("lastname");
+            String role = result.getString("role");
 
-            Person person = new Person(userid, email, password, firstname, lastname);
+            Person person = new Person(userid, email, password, firstname, lastname, role);
             return person;
         }
         catch (SQLException e) {
@@ -67,8 +68,9 @@ public class PersonDbSQL implements PersonDb {
                 String password = result.getString("password");
                 String firstname = result.getString("firstname");
                 String lastname = result.getString("lastname");
+                String role = result.getString("role");
 
-                Person person = new Person(userid, email, password, firstname, lastname);
+                Person person = new Person(userid, email, password, firstname, lastname, role);
                 persons.add(person);
             }
             return persons;
@@ -85,7 +87,7 @@ public class PersonDbSQL implements PersonDb {
         }
         try (Connection connection = DriverManager.getConnection(url, properties);
              PreparedStatement statement = connection.prepareStatement("select * from person where userid = ?");
-             PreparedStatement statement2 = connection.prepareStatement("insert into person values (?, ?, ?, ?, ?)")
+             PreparedStatement statement2 = connection.prepareStatement("insert into person values (?, ?, ?, ?, ?, ?)")
         ) {
 
             String userid = person.getUserid();
@@ -93,6 +95,7 @@ public class PersonDbSQL implements PersonDb {
             String password = person.getPassword();
             String firstname = person.getFirstName();
             String lastname = person.getLastName();
+            String role = person.getRole();
 
             statement.setString(1, userid);
             ResultSet userPresent = statement.executeQuery();
@@ -105,6 +108,7 @@ public class PersonDbSQL implements PersonDb {
                 statement2.setString(3, password);
                 statement2.setString(4, firstname);
                 statement2.setString(5, lastname);
+                statement2.setString(6, role);
                 statement2.execute();
             }
         }
@@ -121,7 +125,7 @@ public class PersonDbSQL implements PersonDb {
         try (Connection connection = DriverManager.getConnection(url, properties);
              PreparedStatement statement = connection.prepareStatement("select * from person where userid = ?");
              PreparedStatement deleteStatement = connection.prepareStatement("delete from person where userid = ?");
-             PreparedStatement statement2 = connection.prepareStatement("insert into person values (?, ?, ?, ?, ?)")
+             PreparedStatement statement2 = connection.prepareStatement("insert into person values (?, ?, ?, ?, ?, ?)")
         ) {
 
             String userid = person.getUserid();
@@ -129,6 +133,7 @@ public class PersonDbSQL implements PersonDb {
             String password = person.getPassword();
             String firstname = person.getFirstName();
             String lastname = person.getLastName();
+            String role = person.getRole();
 
             statement.setString(1, userid);
             ResultSet userPresent = statement.executeQuery();
@@ -143,6 +148,7 @@ public class PersonDbSQL implements PersonDb {
                 statement2.setString(3, password);
                 statement2.setString(4, firstname);
                 statement2.setString(5, lastname);
+                statement2.setString(6, role);
                 statement2.execute();
             }
         }
@@ -218,8 +224,9 @@ public class PersonDbSQL implements PersonDb {
                 String password = result.getString("password");
                 String firstname = result.getString("firstname");
                 String lastname = result.getString("lastname");
+                String role = result.getString("role");
 
-                Person person = new Person(userid, email, password, firstname, lastname);
+                Person person = new Person(userid, email, password, firstname, lastname, role);
                 persons.add(person);
             }
 

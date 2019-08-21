@@ -25,6 +25,7 @@ public class AddPersonHandler extends RequestHandler {
         String password = request.getParameter("password");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
+        String role = "customer";
 
 
         try{
@@ -56,11 +57,17 @@ public class AddPersonHandler extends RequestHandler {
             errors.add(e.getMessage());
         }
         try {
-            person.setLastName(request.getParameter("lastName"));
+            person.setLastName(lastName);
             request.setAttribute("lastName", lastName);
         }
         catch (Exception e){
             errors.add(e.getMessage());
+        }
+        try{
+            person.setRole(role);
+        }
+        catch (Exception e){
+
         }
 
         if (errors.isEmpty()) {

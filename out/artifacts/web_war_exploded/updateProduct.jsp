@@ -20,7 +20,7 @@
                 <li><a href="Controller">Home</a></li>
                 <li><a href="Controller?action=users">Users</a></li>
                 <li><a href="Controller?action=products">Products</a></li>
-                <li><a href="Controller?action=addProduct">Add Product</a></li>
+                <c:if test="${sessionScope.user.role eq 'admin'}"><li><a href="Controller?action=addProduct">Add Product</a></li></c:if>
                 <li><a href="Controller?action=signUp">Sign up</a></li>
                 <li><a href="Controller?action=cart">My Cart</a></li>
             </ul>

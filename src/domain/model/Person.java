@@ -13,6 +13,16 @@ public class Person {
 	private String password;
 	private String firstName;
 	private String lastName;
+	private Role role;
+
+	public Person(String userid, String email, String password, String firstName, String lastName, String role) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		setUserid(userid);
+		setEmail(email);
+		setPassword(password);
+		setFirstName(firstName);
+		setLastName(lastName);
+		setRole(role);
+	}
 
 	public Person(String userid, String email, String password, String firstName, String lastName) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 		setUserid(userid);
@@ -20,6 +30,7 @@ public class Person {
 		setPassword(password);
 		setFirstName(firstName);
 		setLastName(lastName);
+		setRole("");
 	}
 	
 	public Person() {
@@ -136,5 +147,18 @@ public class Person {
 	@Override
 	public String toString(){
 		return getFirstName() + " " + getLastName() + ": " + getUserid() + ", " + getEmail();
-	}	
+	}
+
+	public String getRole() {
+		return role.toString();
+	}
+
+	public void setRole(String role) {
+		if (role.equals("admin")){
+			this.role = Role.ADMIN;
+		}
+		else {
+			this.role = Role.CUSTOMER;
+		}
+	}
 }
