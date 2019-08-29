@@ -25,10 +25,6 @@
         <param-value>r0647075</param-value>
     </context-param>
     <context-param>
-        <param-name>password</param-name>
-        <param-value>8terWesseltje20</param-value>
-    </context-param>
-    <context-param>
         <param-name>currentSchema</param-name>
         <param-value>r0647075</param-value>
     </context-param>
